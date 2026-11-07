@@ -161,13 +161,9 @@ function render() {
   $('#hero-fan').innerHTML = ROLE_KEYS.map((r, i) => `
     <div class="fan-card" style="--i:${i - 2}">${cardHTML(r, { big: true })}</div>`).join('');
 
-  // partículas de fundo (brasas)
-  const amb = $('#ambient');
-  amb.innerHTML = Array.from({ length: 26 }, () => {
-    const x = Math.random() * 100, d = 8 + Math.random() * 14, del = -Math.random() * 20, s = 2 + Math.random() * 4;
-    return `<i style="left:${x}%;--d:${d}s;animation-delay:${del}s;width:${s}px;height:${s}px"></i>`;
-  }).join('');
 })();
+
+$('.coin-pile').innerHTML = [[6, 28], [24, 30], [42, 27], [14, 14], [32, 15], [23, 2]].map(([x, y]) => `<span style="left:${x}px;top:${y}px">${coinSvg()}</span>`).join('');
 
 // ---------------------------------------------------------------- cartas
 function cardHTML(role, { big = false, facedown = false } = {}) {
@@ -742,7 +738,7 @@ function flyCoins(from, to, n) {
       { transform: 'translate(-50%,-50%) scale(0.6)', opacity: 0 },
       { transform: `translate(calc(-50% + ${dx * 0.5}px), calc(-50% + ${dy * 0.5 - 80}px)) scale(1.15) rotateY(540deg)`, opacity: 1, offset: 0.5 },
       { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.8) rotateY(1080deg)`, opacity: 0.9 },
-    ], { duration: 750, delay: i * 90, easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'backwards' });
+    ], { duration: 750, delay: i * 90, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' });
     anim.onfinish = () => c.remove();
     setTimeout(Sound.coin, i * 90 + 600);
   }
