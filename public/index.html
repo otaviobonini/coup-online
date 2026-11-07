@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mascarada — blefe e intriga online</title>
+  <meta name="description" content="Jogo de blefe online para 2 a 9 jogadores. Crie uma sala, chame os amigos ou jogue contra bots." />
+  <meta name="theme-color" content="#12070a" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M4 30C5 18 22 14 32 23C42 14 59 18 60 30C59 42 44 46 32 38C20 46 5 42 4 30Z' fill='%23e3b53f'/%3E%3Cpath d='M12 30Q20 23 28 30Q20 35 12 30ZM36 30Q44 23 52 30Q44 35 36 30Z' fill='%2312070a'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700;900&family=Alegreya:ital,wght@0,500;0,700;1,500&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="ambient" aria-hidden="true"></div>
+
+  <!-- ============ INÍCIO ============ -->
+  <section id="screen-home" class="screen">
+    <div class="hero">
+      <div class="hero-fan" id="hero-fan"></div>
+      <h1 class="logo">Mascarada</h1>
+      <p class="tagline">Cinco personagens, duas cartas na mão e nenhuma palavra confiável.</p>
+    </div>
+
+    <div class="panel home-panel">
+      <label class="field">
+        <span>Seu nome</span>
+        <input id="in-name" maxlength="16" autocomplete="nickname" placeholder="Como te chamam na corte?" />
+      </label>
+
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="create" role="tab">Criar sala</button>
+        <button class="tab" data-tab="join" role="tab">Entrar com código</button>
+      </div>
+
+      <div class="tab-body" id="tab-create">
+        <div class="field">
+          <span>Jogadores humanos na sala</span>
+          <div class="seg" id="seg-humans"></div>
+          <small class="hint">Escolha de 1 a 9. Lugares vazios podem ser ocupados por bots — com 1 você joga sozinho contra a máquina.</small>
+        </div>
+        <label class="field">
+          <span>Tempo para contestar / bloquear</span>
+          <select id="sel-time">
+            <option value="8">8 segundos (rápido)</option>
+            <option value="10">10 segundos</option>
+            <option value="15" selected>15 segundos</option>
+            <option value="20">20 segundos</option>
+            <option value="30">30 segundos (calmo)</option>
+          </select>
+        </label>
+        <button class="btn gold big" id="btn-create">Criar sala</button>
+      </div>
+
+      <div class="tab-body hidden" id="tab-join">
+        <label class="field">
+          <span>Código da sala</span>
+          <input id="in-code" class="code-input" maxlength="4" placeholder="ABCD" autocomplete="off" />
+        </label>
+        <button class="btn gold big" id="btn-join">Entrar</button>
+      </div>
+
+      <button class="btn ghost" data-open="guide">Como jogar</button>
+    </div>
+  </section>
+
+  <!-- ============ SALA ============ -->
+  <section id="screen-lobby" class="screen hidden">
+    <div class="lobby">
+      <header class="lobby-head">
+        <div>
+          <div class="eyebrow">Sala</div>
+          <div class="room-code" id="lobby-code">----</div>
+        </div>
+        <div class="lobby-share">
+          <button class="btn" id="btn-copy">Copiar convite</button>
+          <button class="btn ghost" id="btn-leave-lobby">Sair</button>
+        </div>
+      </header>
+
+      <div class="lobby-grid">
+        <div class="panel">
+          <h2>À mesa <span id="lobby-count" class="muted"></span></h2>
+          <div class="seats-grid" id="lobby-seats"></div>
+        </div>
+        <div class="panel lobby-side">
+          <h2>Regras da sala</h2>
+          <div id="lobby-settings"></div>
+          <div class="deck-info" id="lobby-deck"></div>
+          <button class="btn gold big" id="btn-start">Iniciar partida</button>
+          <p class="hint" id="lobby-hint"></p>
+          <div class="chat lobby-chat">
+            <div class="chat-list" id="lobby-chat"></div>
+            <form class="chat-form" data-chat><input maxlength="160" placeholder="Conversar com a mesa…" /><button class="btn">Enviar</button></form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ JOGO ============ -->
+  <section id="screen-game" class="screen hidden">
+    <header class="topbar">
+      <div class="brand">Mascarada <span class="chip" id="game-code"></span></div>
+      <div class="turn-info" id="turn-info"></div>
+      <div class="top-actions">
+        <button class="icon-btn" data-open="guide" title="Guia dos personagens"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M8 7h7"/></svg></button>
+        <button class="icon-btn" id="btn-sound" title="Som"><svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6L8 10z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+        <button class="icon-btn" id="btn-side" title="Registro e chat"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></button>
+        <button class="icon-btn" id="btn-leave" title="Sair"><svg viewBox="0 0 24 24"><path d="M14 3H6v18h8"/><path d="M11 12h10"/><path d="M18 9l3 3-3 3"/></svg></button>
+      </div>
+    </header>
+
+    <div class="game-body">
+      <div class="arena">
+        <div class="table-wrap" id="table-wrap">
+          <div class="table3d"><div class="felt"></div></div>
+          <div class="table-center">
+            <div class="court">
+              <div class="deck-stack" id="deck-stack"></div>
+              <div class="court-label">Corte <b id="deck-count">0</b></div>
+            </div>
+            <div class="treasury" id="treasury">
+              <div class="coin-pile"></div>
+              <div class="court-label">Tesouro</div>
+            </div>
+          </div>
+          <div class="claim-banner" id="claim-banner"></div>
+          <div id="seats"></div>
+        </div>
+
+        <div class="me-zone">
+          <div class="prompt" id="prompt"></div>
+          <div class="my-area" id="my-area">
+            <div class="bubble"></div>
+            <div class="my-plate" id="my-plate"></div>
+            <div class="hand" id="hand"></div>
+          </div>
+          <div class="actions" id="actions"></div>
+        </div>
+      </div>
+
+      <aside class="sidebar" id="sidebar">
+        <div class="side-tabs">
+          <button class="side-tab active" data-side="log">Registro</button>
+          <button class="side-tab" data-side="chat">Chat <span class="dot hidden" id="chat-dot"></span></button>
+        </div>
+        <div class="side-body" id="side-log"><ol class="log" id="log"></ol></div>
+        <div class="side-body hidden chat" id="side-chat">
+          <div class="chat-list" id="game-chat"></div>
+          <form class="chat-form" data-chat><input maxlength="160" placeholder="Negocie, ameace, minta…" /><button class="btn">Enviar</button></form>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <div id="fx-layer" aria-hidden="true"></div>
+  <div id="modal-root"></div>
+  <div id="toasts"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

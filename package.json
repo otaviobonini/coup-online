@@ -1,0 +1,22 @@
+{
+  "name": "mascarada-online",
+  "version": "1.0.0",
+  "description": "Mascarada — jogo de blefe e intriga online, para 2 a 9 jogadores (com bots).",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node test/simulate.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.1"
+  }
+}
