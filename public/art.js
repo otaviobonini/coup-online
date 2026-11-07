@@ -1,4 +1,4 @@
-// Ilustrações originais em SVG dos personagens de Mascarada.
+// Ilustrações originais em SVG dos personagens de Coup.
 
 const DEFS = `
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -356,7 +356,7 @@ export function cardBack() {
       <path d="M0 5 L0 30" stroke="url(#gold)" stroke-width="2"/>
       <path d="M-6 30 L0 40 L6 30Z" fill="url(#gold)"/>
     </g>
-    <text x="100" y="226" text-anchor="middle" font-family="Cinzel, serif" font-size="13" letter-spacing="4" fill="#e9dcbc" opacity="0.9">MASCARADA</text>
+    <text x="100" y="226" text-anchor="middle" font-family="Cinzel, serif" font-size="13" letter-spacing="4" fill="#e9dcbc" opacity="0.9">COUP</text>
     ${vignette}`, 'back');
 }
 

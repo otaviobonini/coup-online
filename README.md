@@ -1,4 +1,4 @@
-# Mascarada — jogo de blefe online
+# Coup — jogo de blefe online
 
 Jogo de cartas de blefe e dedução para **2 a 9 jogadores**, no navegador, em tempo real.
 Crie uma sala, mande o link e jogue. Lugares vazios podem ser preenchidos com bots, então dá para jogar sozinho.

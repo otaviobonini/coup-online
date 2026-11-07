@@ -748,3 +748,22 @@ input:focus, select:focus { box-shadow: none; border-color: var(--gold); }
 .card.img .card-ribbon { display: none; }
 .card.img .card-front > .portrait { box-shadow: none; border-radius: 0; }
 .mini-por img, .mini-card img, .deck-mini-card img, .deck-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---- visual mais sóbrio: cores chapadas, sem brilho/desfoque ---- */
+:root {
+  --f-title: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-flavor: system-ui, sans-serif;
+  --f-ui: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --gold: #d9a441; --gold-hi: #f1e3c0; --line: rgba(255, 255, 255, 0.14);
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+body { background-image: none; background-color: #1b1416; }
+h1, h2, h3 { letter-spacing: 0; }
+.panel { backdrop-filter: none; box-shadow: var(--shadow); background: #261b1e; border-radius: 8px; }
+.btn { background: #3a2c30; border-radius: 6px; box-shadow: none; text-shadow: none; transition: background 0.15s; }
+.btn:hover:not(:disabled) { transform: none; box-shadow: none; background: #4a383d; }
+.btn.gold { background: #d9a441; color: #1b1416; border-color: #d9a441; box-shadow: none; text-shadow: none; }
+.btn.red { background: #b3263a; border-color: #b3263a; }
+.btn.role { background: color-mix(in srgb, var(--rc) 35%, #261b1e); }
+.btn.big { letter-spacing: 0; }
+.icon-btn { border-radius: 6px; }

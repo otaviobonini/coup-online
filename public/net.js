@@ -5,7 +5,7 @@
 import { RoomHub, newCode } from './shared/rooms.js';
 
 const LOCAL = 'local';
-const PREFIX = 'mascarada-sala-v1-';
+const PREFIX = 'coup-sala-v1-';
 
 export function createNet() {
   if (typeof window.io === 'function') return socketNet();

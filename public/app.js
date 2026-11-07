@@ -10,9 +10,9 @@ const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const store = {
-  get(k, d) { try { const v = localStorage.getItem('mascarada.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
-  set(k, v) { try { localStorage.setItem('mascarada.' + k, JSON.stringify(v)); } catch { /* ok */ } },
-  del(k) { try { localStorage.removeItem('mascarada.' + k); } catch { /* ok */ } },
+  get(k, d) { try { const v = localStorage.getItem('coup.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('coup.' + k, JSON.stringify(v)); } catch { /* ok */ } },
+  del(k) { try { localStorage.removeItem('coup.' + k); } catch { /* ok */ } },
 };
 const HUES = [42, 350, 175, 215, 140, 280, 20, 195, 320];
 const roleName = (r) => ROLES[r]?.name ?? r;

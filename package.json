@@ -1,7 +1,7 @@
 {
-  "name": "mascarada-online",
+  "name": "coup-online",
   "version": "1.0.0",
-  "description": "Mascarada — jogo de blefe e intriga online, para 2 a 9 jogadores (com bots).",
+  "description": "Coup — jogo de blefe e intriga online, para 2 a 9 jogadores (com bots).",
   "type": "module",
   "main": "server/index.js",
   "scripts": {

@@ -28,4 +28,4 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => hub.disconnect(socket.id));
 });
 
-server.listen(PORT, () => console.log(`Mascarada rodando em http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`Coup rodando em http://localhost:${PORT}`));
