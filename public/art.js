@@ -307,7 +307,37 @@ function alquimista() {
     ${vignette}`);
 }
 
+// ---------------- Cartas como imagem ----------------
+// Coloque arquivos em public/cartas/<nome>.(png|jpg|jpeg|webp|svg).
+// Nomes: banqueiro, envenenador, contrabandista, emissario, alquimista e verso.
+// Quando a imagem existe, ela substitui a ilustração desenhada.
+export const CARD_FILES = ['banqueiro', 'envenenador', 'contrabandista', 'emissario', 'alquimista', 'verso'];
+const EXTS = ['png', 'webp', 'jpg', 'jpeg', 'svg'];
+export const cardImages = {};
+
+function probe(url) {
+  return new Promise((res) => {
+    const img = new Image();
+    img.onload = () => res(true);
+    img.onerror = () => res(false);
+    img.src = url;
+  });
+}
+
+export async function loadCardImages() {
+  await Promise.all(CARD_FILES.map(async (name) => {
+    for (const ext of EXTS) {
+      const url = `/cartas/${name}.${ext}`;
+      if (await probe(url)) { cardImages[name] = url; return; }
+    }
+  }));
+}
+
+export const hasImage = (role) => !!cardImages[role];
+const imgTag = (name) => `<img class="portrait card-img" src="${cardImages[name]}" alt="" draggable="false">`;
+
 export function cardBack() {
+  if (cardImages.verso) return imgTag('verso');
   return svg(`
     ${bg('back')}
     <rect width="200" height="260" fill="url(#p-diamond)"/>
@@ -329,6 +359,7 @@ export function cardBack() {
 const PORTRAITS = { banqueiro, envenenador, contrabandista, emissario, alquimista };
 const cache = {};
 export function portrait(role) {
+  if (cardImages[role]) return imgTag(role);
   if (!PORTRAITS[role]) return cardBack();
   return (cache[role] ||= PORTRAITS[role]());
 }

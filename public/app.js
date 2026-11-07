@@ -1,7 +1,8 @@
 import { ROLES, ROLE_KEYS, ACTIONS, ACTION_KEYS, MAX_SEATS, COUP_COST, FORCED_COUP, copiesFor } from '/shared/rules.js';
-import { injectDefs, portrait, cardBack, avatar, coinSvg } from './art.js';
+import { injectDefs, portrait, cardBack, avatar, coinSvg, loadCardImages, hasImage } from './art.js';
 
 injectDefs();
+await loadCardImages();
 
 // ---------------------------------------------------------------- utilidades
 const $ = (s, el = document) => el.querySelector(s);
@@ -173,7 +174,7 @@ function cardHTML(role, { big = false, facedown = false } = {}) {
       <div class="card-ribbon" style="--rc:${info.color}"><span>${info.name}</span></div>
       ${big ? `<div class="card-text">${esc(info.text)}</div>` : ''}` : '';
   return `
-  <div class="card ${big ? 'big' : ''} ${facedown || !info ? 'facedown' : ''}" data-role="${role || ''}">
+  <div class="card ${big ? 'big' : ''} ${facedown || !info ? 'facedown' : ''} ${info && hasImage(role) ? 'img' : ''}" data-role="${role || ''}">
     <div class="card-inner">
       <div class="card-face card-front">${front}</div>
       <div class="card-face card-back">${cardBack()}</div>
@@ -195,6 +196,7 @@ function patchCard(el, role, revealed, { big = false, mine = false } = {}) {
     el.dataset.role = want;
   }
   el.classList.toggle('facedown', !want);
+  el.classList.toggle('img', !!want && hasImage(want));
   el.classList.toggle('dead', !!revealed);
 }
 

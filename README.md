@@ -20,6 +20,14 @@ Ações gerais: **Renda** (+1), **Ajuda Externa** (+2), **Golpe** (paga 7, imblo
 - 2 jogadores: cada um começa com 1 moeda.
 - 2–6 jogadores: 3 cópias de cada personagem; 7–8: 4 cópias; 9: 5 cópias.
 
+## Artes das cartas
+
+As cartas podem ser imagens: coloque os arquivos em `public/cartas/` com os nomes
+`banqueiro`, `envenenador`, `contrabandista`, `emissario`, `alquimista` e `verso`
+(`.png`, `.webp`, `.jpg` ou `.svg`, proporção 5 × 7). Cada imagem encontrada substitui
+a ilustração desenhada; as que faltarem continuam com o desenho padrão.
+Detalhes em [`public/cartas/LEIAME.md`](public/cartas/LEIAME.md).
+
 ## Rodando localmente
 
 ```bash
