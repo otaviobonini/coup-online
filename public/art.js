@@ -309,9 +309,13 @@ function alquimista() {
 
 // ---------------- Cartas como imagem ----------------
 // Coloque arquivos em public/cartas/<nome>.(png|jpg|jpeg|webp|svg).
-// Nomes: banqueiro, envenenador, contrabandista, emissario, alquimista e verso.
+// Nomes: duque, envenenador, contrabandista, embaixador, alquimista e verso.
 // Quando a imagem existe, ela substitui a ilustração desenhada.
-export const CARD_FILES = ['banqueiro', 'envenenador', 'contrabandista', 'emissario', 'alquimista', 'verso'];
+// id interno da carta -> nome do arquivo em public/cartas
+export const CARD_FILES = {
+  banqueiro: 'duque', envenenador: 'assassino', contrabandista: 'capitao',
+  emissario: 'embaixador', alquimista: 'condessa', verso: 'verso',
+};
 const EXTS = ['png', 'webp', 'jpg', 'jpeg', 'svg'];
 export const cardImages = {};
 
@@ -325,10 +329,10 @@ function probe(url) {
 }
 
 export async function loadCardImages() {
-  await Promise.all(CARD_FILES.map(async (name) => {
+  await Promise.all(Object.entries(CARD_FILES).map(async ([role, name]) => {
     for (const ext of EXTS) {
       const url = `cartas/${name}.${ext}`;
-      if (await probe(url)) { cardImages[name] = url; return; }
+      if (await probe(url)) { cardImages[role] = url; return; }
     }
   }));
 }
