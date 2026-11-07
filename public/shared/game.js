@@ -1,6 +1,6 @@
 // Motor do jogo: máquina de estados autoritativa (roda só no servidor).
-import { randomInt } from 'node:crypto';
-import { ROLES, ROLE_KEYS, ACTIONS, COUP_COST, FORCED_COUP, copiesFor } from '../shared/rules.js';
+import { randomInt } from './random.js';
+import { ROLES, ROLE_KEYS, ACTIONS, COUP_COST, FORCED_COUP, copiesFor } from './rules.js';
 
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {

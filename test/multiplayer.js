@@ -3,7 +3,7 @@
 import { spawn } from 'node:child_process';
 import assert from 'node:assert/strict';
 import { io } from 'socket.io-client';
-import { ACTIONS } from '../shared/rules.js';
+import { ACTIONS } from '../public/shared/rules.js';
 
 const PORT = 3999;
 const URL = `http://localhost:${PORT}`;

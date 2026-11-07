@@ -1,8 +1,8 @@
 // Simula milhares de partidas só com bots e verifica invariantes do motor.
 import assert from 'node:assert/strict';
-import { Game } from '../server/game.js';
-import { botAct } from '../server/bot.js';
-import { ROLE_KEYS } from '../shared/rules.js';
+import { Game } from '../public/shared/game.js';
+import { botAct } from '../public/shared/bot.js';
+import { ROLE_KEYS } from '../public/shared/rules.js';
 
 const GAMES = Number(process.argv[2] || 3000);
 let totalTurns = 0;

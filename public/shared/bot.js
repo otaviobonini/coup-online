@@ -1,5 +1,5 @@
 // IA simples para preencher lugares vazios. Só usa as próprias cartas + informação pública.
-import { ACTIONS, ROLE_KEYS, COUP_COST, FORCED_COUP } from '../shared/rules.js';
+import { ACTIONS, ROLE_KEYS, COUP_COST, FORCED_COUP } from './rules.js';
 
 export const BOT_NAMES = ['Lorenzo', 'Bianca', 'Marco', 'Giulia', 'Vittorio', 'Serafina', 'Matteo', 'Lucrezia', 'Dante', 'Isabella', 'Cosimo', 'Beatrice'];
 

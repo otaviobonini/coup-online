@@ -44,25 +44,30 @@ npm test                     # simula 3000 partidas só com bots (2 a 9 jogadore
 node test/multiplayer.js     # 9 clientes reais via socket: sala cheia, reconexão, saída, partida completa
 ```
 
-## Publicando (Render, Railway, Fly…)
+## Jogar online
 
-É um único servidor Node (Express + Socket.IO) que serve o front-end estático.
-Qualquer host com suporte a WebSocket funciona:
+**GitHub Pages (sem servidor):** https://otaviobonini.github.io/coup-online/
 
-- **Build:** `npm install`
-- **Start:** `npm start`
-- A porta vem da variável `PORT`.
+No Pages não existe servidor, então quem cria a sala vira o anfitrião: a partida roda no
+navegador dele e os outros se conectam direto por WebRTC (PeerJS). Por isso o anfitrião
+não pode fechar a aba durante o jogo (e, tecnicamente, poderia espiar as cartas pelo console do navegador; para partidas sérias use o servidor Node). O deploy é automático a cada push no `main`
+(`.github/workflows/pages.yml`, publica a pasta `public/`).
 
-No Render: *New → Web Service*, aponte para este repositório, e use os comandos acima (há um `render.yaml` pronto).
+**Servidor Node (opcional):** rodando `npm start` em qualquer host com WebSocket
+(Render, Railway, Fly…), as salas ficam no servidor e o anfitrião pode sair à vontade.
+No Render: *New → Web Service* com este repositório (há um `render.yaml` pronto).
+O mesmo front-end detecta sozinho qual modo usar.
 
 ## Estrutura
 
 ```
-server/index.js   salas, conexões e bots (Socket.IO)
-server/game.js    motor do jogo (máquina de estados autoritativa)
-server/bot.js     IA dos bots
-shared/rules.js   personagens e ações (usado no servidor e no navegador)
-public/           interface: mesa 3D em CSS, cartas ilustradas em SVG
+public/shared/game.js    motor do jogo (máquina de estados autoritativa)
+public/shared/rooms.js   salas, jogadores e bots (independente de transporte)
+public/shared/bot.js     IA dos bots
+public/shared/rules.js   personagens e ações
+public/net.js            rede: Socket.IO (com servidor) ou P2P/PeerJS (GitHub Pages)
+public/                  interface: mesa 3D em CSS, cartas em SVG ou imagens em public/cartas
+server/index.js          servidor Node opcional (Socket.IO)
 ```
 
 O servidor é a única fonte da verdade: cada jogador só recebe as próprias cartas.

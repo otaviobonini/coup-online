@@ -327,7 +327,7 @@ function probe(url) {
 export async function loadCardImages() {
   await Promise.all(CARD_FILES.map(async (name) => {
     for (const ext of EXTS) {
-      const url = `/cartas/${name}.${ext}`;
+      const url = `cartas/${name}.${ext}`;
       if (await probe(url)) { cardImages[name] = url; return; }
     }
   }));

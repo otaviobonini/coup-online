@@ -1,4 +1,5 @@
-import { ROLES, ROLE_KEYS, ACTIONS, ACTION_KEYS, MAX_SEATS, COUP_COST, FORCED_COUP, copiesFor } from '/shared/rules.js';
+import { ROLES, ROLE_KEYS, ACTIONS, ACTION_KEYS, MAX_SEATS, COUP_COST, FORCED_COUP, copiesFor } from './shared/rules.js';
+import { createNet } from './net.js';
 import { injectDefs, portrait, cardBack, avatar, coinSvg, loadCardImages, hasImage } from './art.js';
 
 injectDefs();
@@ -66,7 +67,11 @@ const S = {
   lastPhaseKey: '',
 };
 
-const socket = io({ transports: ['websocket', 'polling'] });
+const socket = createNet();
+const PAGE = location.pathname;
+window.addEventListener('beforeunload', (e) => {
+  if (socket.isHost() && S.room) { e.preventDefault(); e.returnValue = ''; }
+});
 
 function emit(ev, data) {
   return new Promise((res) => socket.emit(ev, data, (r) => {
@@ -79,7 +84,7 @@ socket.on('connect', () => {
   const sess = store.get('session');
   if (sess?.code && sess?.playerId) {
     socket.emit('join', { code: sess.code, playerId: sess.playerId, name: store.get('name', '') }, (r) => {
-      if (r?.error) { store.del('session'); showScreen('home'); }
+      if (r?.error) { store.del('session'); S.room = null; showScreen('home'); if (sess.code) toast(r.error, 'error'); }
     });
   }
 });
@@ -145,14 +150,14 @@ function render() {
   $('#btn-create').addEventListener('click', async () => {
     const n = name(); if (!n) return;
     const r = await emit('create', { name: n, maxHumans: humans, responseSec: +$('#sel-time').value });
-    if (r.ok) { store.set('session', { code: r.code, playerId: r.playerId }); history.replaceState(null, '', `?sala=${r.code}`); }
+    if (r.ok) { store.set('session', { code: r.code, playerId: r.playerId }); history.replaceState(null, '', `${PAGE}?sala=${r.code}`); }
   });
   const join = async () => {
     const n = name(); if (!n) return;
     const c = $('#in-code').value.trim().toUpperCase();
     if (c.length !== 4) return toast('O código tem 4 letras.', 'error');
     const r = await emit('join', { code: c, name: n });
-    if (r.ok) { store.set('session', { code: r.code, playerId: r.playerId }); history.replaceState(null, '', `?sala=${r.code}`); }
+    if (r.ok) { store.set('session', { code: r.code, playerId: r.playerId }); history.replaceState(null, '', `${PAGE}?sala=${r.code}`); }
   };
   $('#btn-join').addEventListener('click', join);
   $('#in-code').addEventListener('keydown', (e) => e.key === 'Enter' && join());
@@ -255,6 +260,7 @@ function renderLobby() {
   $('#lobby-hint').textContent = isHost
     ? (n < 2 ? 'Adicione pelo menos um bot ou espere alguém entrar.' : 'Pronto para começar.')
     : 'Aguardando o anfitrião iniciar a partida…';
+  if (socket.mode === 'p2p' && socket.isHost()) $('#lobby-hint').textContent += ' Você está hospedando a sala: não feche esta aba.';
 }
 
 document.addEventListener('click', async (e) => {
@@ -268,16 +274,17 @@ document.addEventListener('click', async (e) => {
 document.addEventListener('change', (e) => { if (e.target.id === 'set-time') emit('settings', { responseSec: +e.target.value }); });
 $('#btn-start').addEventListener('click', () => emit('start'));
 $('#btn-copy').addEventListener('click', async () => {
-  const link = `${location.origin}/?sala=${S.room.code}`;
+  const link = `${location.origin}${PAGE}?sala=${S.room.code}`;
   try { await navigator.clipboard.writeText(link); toast('Link da sala copiado.'); }
   catch { prompt('Copie o link:', link); }
 });
 const leave = async () => {
-  if (S.room?.game && S.room.game.phase !== 'over' && !confirm('Sair da partida? Um bot assume o seu lugar.')) return;
+  const msg = socket.isHost() ? 'Você é o anfitrião: se sair, a sala fecha para todos. Sair mesmo?' : 'Sair da partida? Um bot assume o seu lugar.';
+  if ((socket.isHost() || (S.room?.game && S.room.game.phase !== 'over')) && !confirm(msg)) return;
   await emit('leave');
   store.del('session');
   S.room = null;
-  history.replaceState(null, '', '/');
+  history.replaceState(null, '', PAGE);
   showScreen('home');
 };
 $('#btn-leave-lobby').addEventListener('click', leave);
