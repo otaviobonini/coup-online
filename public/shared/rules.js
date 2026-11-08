@@ -2,35 +2,35 @@
 
 export const ROLES = {
   banqueiro: {
-    name: 'Banqueiro',
+    name: 'Duque',
     color: '#c9a227',
     action: 'juros',
     blocks: ['ajuda'],
     text: 'Cobrar Juros: pegue 3 moedas. Bloqueia Ajuda Externa.',
   },
   envenenador: {
-    name: 'Envenenador',
+    name: 'Assassino',
     color: '#b3263a',
     action: 'envenenar',
     blocks: [],
     text: 'Envenenar: pague 3 moedas; o alvo perde uma influência.',
   },
   contrabandista: {
-    name: 'Contrabandista',
+    name: 'Capitão',
     color: '#2a9d8f',
     action: 'saquear',
     blocks: ['saquear'],
     text: 'Saquear: tome 2 moedas de outro jogador. Bloqueia Saque.',
   },
   emissario: {
-    name: 'Emissário',
+    name: 'Embaixador',
     color: '#4a7bd0',
     action: 'negociar',
     blocks: ['saquear'],
     text: 'Negociar: compre 2 cartas da Corte e troque. Bloqueia Saque.',
   },
   alquimista: {
-    name: 'Alquimista',
+    name: 'Condessa',
     color: '#3fbf6f',
     action: null,
     blocks: ['envenenar'],

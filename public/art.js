@@ -1,4 +1,4 @@
-// Ilustrações originais em SVG dos personagens de Mascarada.
+// Ilustrações originais em SVG dos personagens de Coup.
 
 const DEFS = `
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -309,9 +309,13 @@ function alquimista() {
 
 // ---------------- Cartas como imagem ----------------
 // Coloque arquivos em public/cartas/<nome>.(png|jpg|jpeg|webp|svg).
-// Nomes: banqueiro, envenenador, contrabandista, emissario, alquimista e verso.
+// Nomes: duque, envenenador, contrabandista, embaixador, alquimista e verso.
 // Quando a imagem existe, ela substitui a ilustração desenhada.
-export const CARD_FILES = ['banqueiro', 'envenenador', 'contrabandista', 'emissario', 'alquimista', 'verso'];
+// id interno da carta -> nome do arquivo em public/cartas
+export const CARD_FILES = {
+  banqueiro: 'duque', envenenador: 'assassino', contrabandista: 'capitao',
+  emissario: 'embaixador', alquimista: 'condessa', verso: 'verso',
+};
 const EXTS = ['png', 'webp', 'jpg', 'jpeg', 'svg'];
 export const cardImages = {};
 
@@ -325,10 +329,10 @@ function probe(url) {
 }
 
 export async function loadCardImages() {
-  await Promise.all(CARD_FILES.map(async (name) => {
+  await Promise.all(Object.entries(CARD_FILES).map(async ([role, name]) => {
     for (const ext of EXTS) {
       const url = `cartas/${name}.${ext}`;
-      if (await probe(url)) { cardImages[name] = url; return; }
+      if (await probe(url)) { cardImages[role] = url; return; }
     }
   }));
 }
@@ -352,7 +356,7 @@ export function cardBack() {
       <path d="M0 5 L0 30" stroke="url(#gold)" stroke-width="2"/>
       <path d="M-6 30 L0 40 L6 30Z" fill="url(#gold)"/>
     </g>
-    <text x="100" y="226" text-anchor="middle" font-family="Cinzel, serif" font-size="13" letter-spacing="4" fill="#e9dcbc" opacity="0.9">MASCARADA</text>
+    <text x="100" y="226" text-anchor="middle" font-family="Cinzel, serif" font-size="13" letter-spacing="4" fill="#e9dcbc" opacity="0.9">COUP</text>
     ${vignette}`, 'back');
 }
 

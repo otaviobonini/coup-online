@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: mascarada
+    name: coup
     runtime: node
     plan: free
     buildCommand: npm install
