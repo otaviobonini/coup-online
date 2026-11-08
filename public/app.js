@@ -22,8 +22,9 @@ function toast(msg, kind = '') {
   t.className = `toast ${kind}`;
   t.textContent = msg;
   $('#toasts').append(t);
-  setTimeout(() => t.classList.add('out'), 2600);
-  setTimeout(() => t.remove(), 3100);
+  const ms = Math.max(2600, String(msg).length * 60);
+  setTimeout(() => t.classList.add('out'), ms);
+  setTimeout(() => t.remove(), ms + 500);
 }
 
 // ---------------------------------------------------------------- som
@@ -67,7 +68,8 @@ const S = {
   lastPhaseKey: '',
 };
 
-const socket = createNet();
+const socket = await createNet();
+socket.on('netstatus', (m) => toast(m.text, m.kind || ''));
 const PAGE = location.pathname;
 window.addEventListener('beforeunload', (e) => {
   if (socket.isHost() && S.room) { e.preventDefault(); e.returnValue = ''; }
@@ -152,11 +154,20 @@ function render() {
     const r = await emit('create', { name: n, maxHumans: humans, responseSec: +$('#sel-time').value });
     if (r.ok) { store.set('session', { code: r.code, playerId: r.playerId }); history.replaceState(null, '', `${PAGE}?sala=${r.code}`); }
   });
+  let joining = false;
   const join = async () => {
+    if (joining) return;
     const n = name(); if (!n) return;
     const c = $('#in-code').value.trim().toUpperCase();
     if (c.length !== 4) return toast('O código tem 4 letras.', 'error');
+    joining = true;
+    const btn = $('#btn-join');
+    btn.disabled = true;
+    btn.textContent = 'Conectando…';
     const r = await emit('join', { code: c, name: n });
+    joining = false;
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
     if (r.ok) { store.set('session', { code: r.code, playerId: r.playerId }); history.replaceState(null, '', `${PAGE}?sala=${r.code}`); }
   };
   $('#btn-join').addEventListener('click', join);

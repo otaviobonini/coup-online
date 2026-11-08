@@ -58,6 +58,24 @@ não pode fechar a aba durante o jogo (e, tecnicamente, poderia espiar as cartas
 No Render: *New → Web Service* com este repositório (há um `render.yaml` pronto).
 O mesmo front-end detecta sozinho qual modo usar.
 
+### Alguns jogadores não conseguem entrar na sala (modo P2P)
+
+No P2P os navegadores se conectam direto ao do anfitrião. Algumas redes bloqueiam isso
+(4G, Wi-Fi de faculdade/empresa, roteadores com NAT restritivo). O jogo já tenta de novo
+sozinho e usa servidores TURN públicos para retransmitir, mas eles não são garantidos. Soluções:
+
+1. **Usar um servidor (recomendado, resolve sempre):** publique o servidor Node no Render
+   (grátis, *New → Web Service* com este repositório) e coloque o endereço em
+   `public/config.js`, em `SERVER_URL` (ex.: `'https://mascarada.onrender.com'`).
+   O site do Pages continua o mesmo, mas as salas passam a ficar no servidor.
+   No plano grátis o Render "dorme" sem uso: a primeira conexão do dia pode levar ~1 minuto.
+2. **TURN próprio:** crie uma conta grátis num serviço de TURN (ex.: Metered) e adicione as
+   credenciais em `EXTRA_ICE_SERVERS`, em `public/config.js`.
+3. Na hora do aperto: quem não consegue entrar troca de rede (ex.: sai do Wi-Fi da faculdade
+   para o 4G ou vice-versa), ou outra pessoa cria a sala.
+
+Confira também o "Máximo de humanos" da sala: se estiver baixo, quem passar do limite recebe "A sala está cheia".
+
 ## Estrutura
 
 ```
@@ -66,6 +84,7 @@ public/shared/rooms.js   salas, jogadores e bots (independente de transporte)
 public/shared/bot.js     IA dos bots
 public/shared/rules.js   personagens e ações
 public/net.js            rede: Socket.IO (com servidor) ou P2P/PeerJS (GitHub Pages)
+public/config.js         SERVER_URL (servidor externo) e servidores TURN extras
 public/                  interface: mesa 3D em CSS, cartas em SVG ou imagens em public/cartas
 server/index.js          servidor Node opcional (Socket.IO)
 ```
